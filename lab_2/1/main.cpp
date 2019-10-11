@@ -7,7 +7,7 @@ int main() {
     std::cout << "Input equation coeffiecients (a, b, c):" << std::endl;
     std::cin >> a >> b >> c;
     
-    if (a < 0) {
+    if (a == 0) {
         std::cout << "The equation is not biquadtratic" << std::endl;
         exit(0);
     }
