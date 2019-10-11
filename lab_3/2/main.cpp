@@ -3,7 +3,7 @@
 int main() {
     int number;
     int count = 0;
-    std::cout << "Input a positibe number: ";
+    std::cout << "Input a positive number: ";
     std::cin >> number;
 
     for (int i = 1; i <= number; i++) {
