@@ -5,8 +5,7 @@ int main() {
     std::cout << "Input test result: ";
     std::cin >> result;
 
-    switch (result)
-    {
+    switch (result) {
         case 90 ... 100:
             std::cout << "Excellent" << std::endl;
             break;
