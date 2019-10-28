@@ -17,6 +17,8 @@ int main() {
     std::cout << "Enter matrix dimensions:" << std::endl;
     std::cin >> height >> width;
 
+    countToShift = downDirection ? countToShift % height : countToShift % width;
+
     int **sourceMatrix = new int*[height];
     int **shiftedMatrix = new int*[height];
     for (int i = 0; i < height; i++) {
@@ -54,7 +56,7 @@ int main() {
             }
         }
     } else {
-       for (int i = 0; i < height; i++) {
+        for (int i = 0; i < height; i++) {
             for (int j = 0; j < countToShift; j++) {
                 shiftedMatrix[i][j] = sourceMatrix[i][width - countToShift + j];
             }
