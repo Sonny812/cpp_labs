@@ -19,7 +19,7 @@ int main() {
             results[i] = number - 58;
         } else if (number <= 5) {
             results[i] = cos(number);
-        } else if (number > 5) {
+        } else {
             results[i] = 0;
         }
     }
