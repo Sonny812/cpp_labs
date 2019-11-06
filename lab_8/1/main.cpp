@@ -16,20 +16,23 @@ enum ProgramMenu {
 	MenuScalarProduct,
 	MenuMultiplyVectorByNumber,
 	MenuMultiplyMatrixByNumber,
-	MenuMultiplyMatrixByVector
+	MenuMultiplyMatrixByVector,
+	MenuMultyiplyMatrixByMatrix,
+	MenuAddMatrixToMatrix,
+	MenuMatrixDeterminant
 };
-ProgramMenu userSelectedMenuItem();
+ProgramMenu getMenuItemFromUserInput();
 
 enum InputType {
 	InputManual,
 	InputAuto
 };
-InputType userSelectedInputType();
+InputType getInputTypeFromUserInput();
 
 int main() {
 	auto createVector = createVectorFromUserInput;
 	auto createMatrix = createMatrixFromUserInput;
-	InputType inputType = userSelectedInputType();
+	InputType inputType = getInputTypeFromUserInput();
 
 	if (inputType == InputAuto) {
 		createVector = generateVector;
@@ -37,7 +40,7 @@ int main() {
 	}
 
 	while (true) {
-		ProgramMenu menu = userSelectedMenuItem();
+		ProgramMenu menu = getMenuItemFromUserInput();
 
 		switch (menu) {
 			case MenuExit:
@@ -109,6 +112,57 @@ int main() {
 				deleteMatrix(matrix, dimensions.getHeight());
 				delete [] vector;
 				delete [] result;
+				break;
+			}
+			case MenuMultyiplyMatrixByMatrix: {
+				std::cout << "[First matrix] ";
+				MatrixDimensions firstMatrixDimensions = MatrixDimensions::createFromUserInput();
+				double **firstMatrix = createMatrix(firstMatrixDimensions);
+				std::cout << "[Second matrix] ";
+				MatrixDimensions secondMatrixDimensions = MatrixDimensions::createFromUserInput();
+				double **secondMatrix = createMatrix(secondMatrixDimensions);
+				std::cout << "Matricies: " << std::endl;
+				printMatrix(firstMatrix, firstMatrixDimensions);
+				std::cout << std::endl << std::endl;
+				printMatrix(secondMatrix, secondMatrixDimensions);
+				if (firstMatrixDimensions.getWidth() != secondMatrixDimensions.getHeight()) {
+					std::cout << "Matrix multiplication is not possible";
+					break;
+				}
+				auto [resultMatrix, resultMatrixDimensions] = multiplyMatrixByMatrix(firstMatrix, firstMatrixDimensions, secondMatrix, secondMatrixDimensions);
+				std::cout << "Result matrix:" << std::endl;
+				printMatrix(resultMatrix, resultMatrixDimensions);
+				deleteMatrix(firstMatrix, firstMatrixDimensions.getHeight());
+				deleteMatrix(secondMatrix, secondMatrixDimensions.getHeight());
+				deleteMatrix(resultMatrix, resultMatrixDimensions.getHeight());
+				break;
+			}
+			case MenuAddMatrixToMatrix: {
+				MatrixDimensions matrixDimensions = MatrixDimensions::createFromUserInput();
+				double **firstMatrix = createMatrix(matrixDimensions);
+				double **secondMatrix = createMatrix(matrixDimensions);
+				std::cout << "Matricies: " << std::endl;
+				printMatrix(firstMatrix, matrixDimensions);
+				std::cout << std::endl;
+				printMatrix(secondMatrix, matrixDimensions);
+				std::cout << std::endl << "Result:" << std::endl;
+				double **resultMatrix = addMatrixToMatrix(firstMatrix, secondMatrix, matrixDimensions);
+				printMatrix(resultMatrix, matrixDimensions);
+				deleteMatrix(firstMatrix, matrixDimensions.getHeight());
+				deleteMatrix(secondMatrix, matrixDimensions.getHeight());
+				deleteMatrix(resultMatrix, matrixDimensions.getHeight());
+				break;
+			}
+			case MenuMatrixDeterminant: {
+				int size;
+				std::cout << "Input matrix size: ";
+				std::cin >> size;
+				MatrixDimensions dimensions = MatrixDimensions(size, size);
+				double **matrix = createMatrix(dimensions);
+				printMatrix(matrix, dimensions);
+				std::cout << "The matrix determinant is " << findMatrixDeterminant(matrix, dimensions);
+				deleteMatrix(matrix, dimensions.getHeight());
+				break;
 			}
 			default:
 				break;
@@ -121,7 +175,7 @@ int main() {
 	}
 }
 
-InputType userSelectedInputType() {
+InputType getInputTypeFromUserInput() {
 	int inputType;
 	std::cout << "Select an input type (0 - manual, 1 - auto): ";
 	std::cin >> inputType;
@@ -129,7 +183,7 @@ InputType userSelectedInputType() {
 	return static_cast<InputType>(inputType);
 }
 
-ProgramMenu userSelectedMenuItem() {
+ProgramMenu getMenuItemFromUserInput() {
 	int menuItem;
 	std::cout <<  
 R"(Select a menu item: 
@@ -138,8 +192,12 @@ R"(Select a menu item:
 3. Multiply vector by number.
 4. Multiply matrix by number.
 5. Multiply matrix by vector.
+6. Multiply matrix by matrix.
+7. Add matrix to matrix.
+8. Find matrix determinant.
 
 0. Exit.
+
 )";
 	std::cout << "Your choice: ";
 	std::cin >> menuItem;

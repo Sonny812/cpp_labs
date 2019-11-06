@@ -1,7 +1,8 @@
 #include <iostream>
 #include <iomanip>
-#include <cmath>
+#include <stdexcept>
 #include <tuple>
+#include <cmath>
 #include "lab.h"
 
 double vectorLength(double *vector, int length) {
@@ -54,6 +55,89 @@ double *multiplyMatrixByVector(double **matrix,  double* vector, MatrixDimension
 
 	return resultVector;
 }
+
+// Returns tuple where first element is the pointer to the matrix and second element is the matrix dimensions
+std::tuple<double**,MatrixDimensions> multiplyMatrixByMatrix(double **firstMatrix, MatrixDimensions firstDimensions, double **secondMatrix, MatrixDimensions secondDimensions) {
+	if (firstDimensions.getWidth() != secondDimensions.getHeight()) {
+		throw std::logic_error("Unable to multiple the matrices. First matrix width should be equal to second matrix height");
+	}
+
+	MatrixDimensions resultMatrixDimensions = MatrixDimensions(firstDimensions.getHeight(), secondDimensions.getWidth());
+	double **resultMatrix = new double*[resultMatrixDimensions.getHeight()];
+	for (int i = 0; i < resultMatrixDimensions.getHeight(); i++) {
+		resultMatrix[i] = new double[resultMatrixDimensions.getWidth()];
+	}
+
+	for (int i = 0; i < firstDimensions.getHeight(); i++) {
+		for (int j = 0; j <  secondDimensions.getWidth(); j++) {
+			for (int k = 0; k < firstDimensions.getWidth(); k++) {
+				resultMatrix[i][j] += firstMatrix[i][k] * secondMatrix[k][j];
+			}
+		}
+	}
+
+	return std::make_tuple(resultMatrix, resultMatrixDimensions);
+}
+
+void minor(double **matrix, double **minorMatrix, int size, int row, int column) {
+	for (int i = 0; i < size; i++) {
+		for (int j = 0; j < size; j++) {
+			if (i < row) {
+				if (j < column) {
+					minorMatrix[i][j] = matrix[i][j];
+				} else if (j > column){
+					minorMatrix[i][j-1] = matrix[i][j];
+				}
+			} else if (i > row) {
+				if (j < column) {
+					minorMatrix[i-1][j] = matrix[i][j];
+				} else if (j > column) {
+					minorMatrix[i-1][j-1] = matrix[i][j];
+				}
+			}
+		}
+	}
+}
+
+double findMatrixDeterminant(double **matrix, MatrixDimensions dimensions) {
+	if (dimensions.getHeight() == 1) {
+		return matrix[0][0];
+	} 
+
+	double result = 0;
+	int sign = -1;
+	int actualSize = dimensions.getHeight() - 1;
+
+	for (int i = 0; i < dimensions.getHeight(); i++) {
+		double **minorMatrix = new double*[actualSize];
+		for ( int j = 0; j < actualSize; j++) {
+			minorMatrix[j] = new double[actualSize];
+		}
+
+		minor(matrix, minorMatrix, dimensions.getHeight(), 0, i);
+
+		sign *= -1;
+
+		result += sign * matrix[0][i] * findMatrixDeterminant(minorMatrix, MatrixDimensions(actualSize, actualSize));
+
+		deleteMatrix(minorMatrix, actualSize);
+	}
+
+	return result;
+} 
+
+double** addMatrixToMatrix(double **firstMatrix, double **secondMatrix, MatrixDimensions dimensions) {
+	double **resultMatrix = new double*[dimensions.getHeight()];
+	for (int i = 0; i < dimensions.getHeight(); i++) {
+		resultMatrix[i] = new double[dimensions.getWidth()];
+		for (int j = 0; j < dimensions.getWidth(); j++) {
+			resultMatrix[i][j] = firstMatrix[i][j] + secondMatrix[i][j];
+		}
+	}
+
+	return resultMatrix;
+}
+
 
 double* generateVector(int length) {
 	double *vector = new double[length];
