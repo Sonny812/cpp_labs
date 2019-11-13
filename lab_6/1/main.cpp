@@ -10,7 +10,7 @@ int main() {
     std::string str;
     std::getline(std::cin, str);
     std::smatch match;
-    std::regex_search(str, match, std::regex("(.+) "));
+    std::regex_search(str, match, std::regex("^(.+) "));
     std::cout << match.str();
 
     std::cout << std::endl << "2. Using C-strings" << std::endl;
