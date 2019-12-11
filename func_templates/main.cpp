@@ -4,7 +4,6 @@
 template <typename T>
 void sort(T *b, int length, bool sortAsc = true)
 {
-	T a;
 	auto comparator = [sortAsc](T a, T b) {
 		return sortAsc ? b < a : a < b;
 	};
