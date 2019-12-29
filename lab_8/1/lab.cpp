@@ -33,10 +33,10 @@ double* multiplyVectorByNumber(double *vector, int length, double number) {
 }
 
 double **multiplyMatrixByNumber(double **matrix, MatrixDimensions dimensions, double number) {
-	double **multipliedMatrix = new double*[dimensions.getWidth()];
-	for (int i = 0; i < dimensions.getWidth(); i++) {
-		multipliedMatrix[i] = new double[dimensions.getHeight()];
-		for (int j = 0; j < dimensions.getHeight(); j++) {
+	double **multipliedMatrix = new double*[dimensions.getHeight()];
+	for (int i = 0; i < dimensions.getHeight(); i++) {
+		multipliedMatrix[i] = new double[dimensions.getWidth()];
+		for (int j = 0; j < dimensions.getWidth(); j++) {
 			multipliedMatrix[i][j] = number * matrix[i][j];
 		}
 	}
@@ -196,7 +196,7 @@ void printVector(double *vector, int length) {
 void printMatrix(double **matrix, MatrixDimensions dimensions) {
 	for (int i = 0; i < dimensions.getHeight(); i++, std::cout << std::endl) {
 		for (int j = 0; j < dimensions.getWidth(); j++) {
-			std::cout << std::setw(4) << matrix[i][j];
+			std::cout << std::setw(6) << matrix[i][j];
 		}
 	}
 }
