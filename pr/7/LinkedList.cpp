@@ -1,6 +1,4 @@
 #include "LinkedList.hpp"
-#include "Node.hpp"
-#include <iostream>
 
 void LinkedList::insert(char ch)
 {
@@ -103,9 +101,8 @@ Node *LinkedList::getNodeBySymbol(char ch)
 LinkedList *LinkedList::reverse()
 {
     auto reversedList = new LinkedList();
-    // auto current = this->head;
 
-    this->traverse([this, &reversedList] (Node* node) {
+    this->traverse([&reversedList](Node *node) {
         auto newNode = new Node(node->getSymbol(), reversedList->head, node->getCount());
         auto reversedListCurrent = reversedList->head;
 
@@ -123,14 +120,7 @@ LinkedList *LinkedList::reverse()
         }
 
         reversedList->head = newNode;
-
     });
-
-    // do
-    // {
-       
-    //     current = current->getNext();
-    // } while (current != this->head);
 
     return reversedList;
 }

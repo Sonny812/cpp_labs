@@ -25,7 +25,7 @@ Node *Node::getNext()
     return this->next;
 }
 
-Node *Node::setNext(Node* node)
+Node *Node::setNext(Node *node)
 {
     this->next = node;
 
